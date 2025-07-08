@@ -39,17 +39,32 @@ export async function updateTask(id: string, task: Partial<TaskItem>): Promise<v
 }
 
 export async function createTask(task: Omit<TaskItem, 'id' | 'createdDate'>): Promise<TaskItem> {
-  const response = await fetch(`${API_BASE_URL}/tasks`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(task),
-  });
-  if (!response.ok) {
-    throw new Error('Failed to create task');
+  try {
+    console.log('Creating task:', task);
+    
+    const response = await fetch(`${API_BASE_URL}/tasks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(task),
+    });
+    
+    console.log('Response status:', response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
+      throw new Error(`Failed to create task: ${response.status} ${response.statusText}`);
+    }
+    
+    const result = await response.json();
+    console.log('Task created successfully:', result);
+    return result;
+  } catch (error) {
+    console.error('Error in createTask:', error);
+    throw error;
   }
-  return response.json();
 }
 
 export async function deleteTask(id: string): Promise<void> {

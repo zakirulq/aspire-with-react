@@ -28,9 +28,21 @@ namespace TaskManagementApp.ApiService.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(TaskItem task)
         {
-            task.CreatedDate = DateTime.UtcNow;
-            await _taskService.CreateAsync(task);
-            return CreatedAtAction(nameof(Get), new { id = task.Id }, task);
+            try
+            {
+                Console.WriteLine($"Received task: Title={task.Title}, Description={task.Description}");
+                
+                task.CreatedDate = DateTime.UtcNow;
+                await _taskService.CreateAsync(task);
+                
+                Console.WriteLine($"Task created successfully with ID: {task.Id}");
+                return CreatedAtAction(nameof(Get), new { id = task.Id }, task);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in POST /tasks: {ex.Message}");
+                return StatusCode(500, new { error = "Failed to create task", details = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]

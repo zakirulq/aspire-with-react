@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TaskManagementApp.ApiService\TaskManagementApp.ApiService.csproj" />
-    <ProjectReference Include="..\TaskManagementApp.Web\TaskManagementApp.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
